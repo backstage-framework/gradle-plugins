@@ -1,0 +1,96 @@
+repositories {
+	mavenCentral()
+}
+
+apply plugin: "groovy"
+apply plugin: "maven-publish"
+apply plugin: "java-gradle-plugin"
+
+group 'com.backstage'
+version appVersion
+
+dependencies {
+	implementation gradleApi()
+
+	implementation "com.google.guava:guava:$guavaVersion"
+	implementation "org.eclipse.persistence:eclipselink:$eclipseLinkVersion"
+}
+
+gradlePlugin {
+	automatedPublishing = false
+
+	plugins {
+		persistenceXml {
+			id = "backstage-jpa-persistence-xml"
+			implementationClass = "com.backstage.gradle.JpaPersistenceXmlPlugin"
+		}
+
+		weaving {
+			id = "backstage-jpa-weaving"
+			implementationClass = "com.backstage.gradle.JpaWeavingPlugin"
+		}
+
+		jpaModelGen {
+			id = "backstage-jpa-modelgen"
+			implementationClass = "com.backstage.gradle.JpaModelGenPlugin"
+		}
+
+		appVersion {
+			id = "backstage-app-version"
+			implementationClass = "com.backstage.gradle.AppVersionPlugin"
+		}
+
+		bpmnpack {
+			id = "backstage-bpmn-pack"
+			implementationClass = "com.backstage.gradle.BpmnPackPlugin"
+		}
+
+		checkstyle {
+			id = "backstage-checkstyle"
+			implementationClass = "com.backstage.gradle.CheckstylePlugin"
+		}
+	}
+}
+
+tasks.register('sourceJar', Jar) {
+	archiveClassifier = 'sources'
+	from sourceSets.main.allSource
+	from "$projectDir/build.gradle"
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId = project.group
+			artifactId = 'gradle-plugins'
+			version = project.version
+
+			from components.java
+			artifact sourceJar
+		}
+	}
+
+	repositories {
+		maven {
+			url backstageNexusUrl
+			credentials(HttpHeaderCredentials) {
+				name = "Deploy-Token"
+				value = backstageNexusToken
+			}
+			authentication {
+				header(HttpHeaderAuthentication)
+			}
+		}
+	}
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(sourceJavaVersion)
+	}
+}
+
+wrapper {
+	gradleVersion = '8.10'
+	distributionType = Wrapper.DistributionType.BIN
+}

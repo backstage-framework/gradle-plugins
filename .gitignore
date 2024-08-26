@@ -1,0 +1,10 @@
+.idea
+*.log
+create.sql
+dropDDL.jdbc
+generated
+generated-sources
+build
+out
+.gradle
+lombok.config
