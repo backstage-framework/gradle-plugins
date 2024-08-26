@@ -46,7 +46,7 @@ class CheckstylePlugin implements Plugin<Project>
 		})
 
 		project.configurations.checkstyle.dependencies.add(
-				project.dependencies.create("com.backstage:checkstyle:1.0.1"))
+				project.dependencies.create("com.backstage:checkstyle:1.0.2"))
 
 		project.tasks.register("checkstyleApplyConfig").configure {
 			doFirst {
