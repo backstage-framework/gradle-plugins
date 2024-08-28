@@ -23,11 +23,13 @@ import org.gradle.api.Project
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.SetProperty
 
 import java.lang.annotation.Annotation
 
 class JpaPersistenceXmlPlugin implements Plugin<Project>
 {
+	static final def DEFAULT_PACKAGE = "com.backstage"
 	static final def DEFAULT_PERSISTENCE_XML_LOCATION = "resources/main/db/META-INF/persistence.xml"
 
 	void apply(Project project)
@@ -59,6 +61,8 @@ class JpaPersistenceXmlPlugin implements Plugin<Project>
 				}
 
 				def entityClasses = []
+
+				extension.entityPackages.add(DEFAULT_PACKAGE as String)
 
 				extension.entityPackages.get().each { packageName ->
 					ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName).each { info ->
@@ -116,7 +120,7 @@ class JpaPersistenceXmlPluginExtension
 
 	Property<String> persistenceUnitName
 
-	ListProperty<String> entityPackages
+	SetProperty<String> entityPackages
 
 	ListProperty<String> attributeConverters
 
@@ -125,7 +129,7 @@ class JpaPersistenceXmlPluginExtension
 		persistenceXmlPath = project.objects.fileProperty().convention(project.layout.buildDirectory.file(JpaPersistenceXmlPlugin.DEFAULT_PERSISTENCE_XML_LOCATION))
 		entityAnnotationClassName = project.objects.property(String.class).convention("jakarta.persistence.Entity")
 		persistenceUnitName = project.objects.property(String.class).convention("app")
-		entityPackages = project.objects.listProperty(String.class).convention(["com.backstage"])
+		entityPackages = project.objects.setProperty(String.class).convention([])
 		attributeConverters = project.objects.listProperty(String.class).convention([])
 	}
 }

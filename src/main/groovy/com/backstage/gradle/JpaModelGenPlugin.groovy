@@ -43,13 +43,15 @@ class JpaModelGenPlugin implements Plugin<Project>
 
 class JpaModelGenPluginExtension
 {
+	static final def DEFAULT_HIBERNATE_VERSION = "6.6.0.Final"
+
 	Property<String> hibernateVersion
 
 	RegularFileProperty persistenceXmlPath
 
 	JpaModelGenPluginExtension(Project project)
 	{
-		hibernateVersion = project.objects.property(String.class).convention("6.4.4.Final")
+		hibernateVersion = project.objects.property(String.class).convention(DEFAULT_HIBERNATE_VERSION)
 		persistenceXmlPath = project.objects.fileProperty().convention(project.layout.buildDirectory.file(JpaPersistenceXmlPlugin.DEFAULT_PERSISTENCE_XML_LOCATION))
 	}
 }
