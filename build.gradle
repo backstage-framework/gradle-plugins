@@ -49,6 +49,11 @@ gradlePlugin {
 			id = "backstage-checkstyle"
 			implementationClass = "com.backstage.gradle.CheckstylePlugin"
 		}
+
+		dictsCodegen {
+			id = "backstage-dicts-codegen"
+			implementationClass = "com.backstage.gradle.DictsCodegenPlugin"
+		}
 	}
 }
 
@@ -72,7 +77,7 @@ publishing {
 				licenses {
 					license {
 						name = "The Apache License, Version 2.0"
-						url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+						url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
 					}
 				}
 			}

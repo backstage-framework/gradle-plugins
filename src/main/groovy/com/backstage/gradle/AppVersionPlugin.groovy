@@ -21,6 +21,7 @@ import org.gradle.api.Project
 
 class AppVersionPlugin implements Plugin<Project>
 {
+	@Override
 	void apply(Project project)
 	{
 		def appVersion
