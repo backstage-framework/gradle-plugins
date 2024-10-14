@@ -1,5 +1,15 @@
 repositories {
 	mavenCentral()
+	maven {
+		url backstageNexusUrl
+		credentials(HttpHeaderCredentials) {
+			name = "Deploy-Token"
+			value = backstageNexusToken
+		}
+		authentication {
+			header(HttpHeaderAuthentication)
+		}
+	}
 }
 
 apply plugin: "groovy"
